@@ -32,7 +32,7 @@ function get_artworks_url(user_id) {
     });
 }
 
-function artworks(illust){
+function artworks(illust) {
   // 拼接插画详情页面链接
   artworks_url = `https://www.pixiv.net/artworks/${illust}`;
   illust_api = `https://www.pixiv.net/touch/ajax/illust/details?illust_id=${illust}&ref=&lang=zh`
@@ -52,17 +52,14 @@ function artworks(illust){
   });
 }
 
-function save_illust(illust_url, name){
+function save_illust(illust_url, name) {
   axios({
     method: 'get',
     url: illust_url,
-    responseType:'stream',
-    headers: {'referer': 'https://www.pixiv.net/'},
+    responseType: 'arraybuffer',
+    headers: { 'referer': 'https://www.pixiv.net/' },
   }).then(function (response) {
-    console.log(name);
-    console.log(response);
-    response.data.pipe(fs.createWriteStream('ada_lovelace.png'))
-    console.log("OK")
+    fs.writeFile('2.png', response.data, (error) => { });
   })
 }
 // get_artworks_url(user_id);
