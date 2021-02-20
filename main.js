@@ -7,6 +7,7 @@ QQ: 2417003944
 
 // 导入外部库
 const axios = require('axios');
+const fs = require('fs');
 
 // 用户id
 const user_id = '1193008';
@@ -26,11 +27,44 @@ function get_artworks_url(user_id) {
       const illusts = response.data.body.illusts;
       // 遍历对象提取id (illust)
       for (illust in illusts) {
-        // 拼接插画详情页面链接
-        artworks_url = `https://www.pixiv.net/artworks/${illust}`;
-        console.log(artworks_url);
+        console.log(illust);
       }
     });
 }
 
-get_artworks_url(user_id);
+function artworks(illust){
+  // 拼接插画详情页面链接
+  artworks_url = `https://www.pixiv.net/artworks/${illust}`;
+  illust_api = `https://www.pixiv.net/touch/ajax/illust/details?illust_id=${illust}&ref=&lang=zh`
+  axios({
+    method: 'get',
+    url: illust_api,
+  }).then(function (response) {
+    // 插画标题
+    const illust_name = response.data.body.illust_details.title
+    // 作者名字
+    const user_name = response.data.body.illust_details.author_details.user_name
+    // 图片地址
+    const illust_url = response.data.body.illust_details
+    console.log(illust_name)
+    console.log(user_name)
+    console.log(illust_url)
+  });
+}
+
+function save_illust(illust_url, name){
+  axios({
+    method: 'get',
+    url: illust_url,
+    responseType:'stream',
+    headers: {'referer': 'https://www.pixiv.net/'},
+  }).then(function (response) {
+    console.log(name);
+    console.log(response);
+    response.data.pipe(fs.createWriteStream('ada_lovelace.png'))
+    console.log("OK")
+  })
+}
+// get_artworks_url(user_id);
+// artworks('80680801')
+save_illust('https://i.pximg.net/img-original/img/2020/04/12/01/14/19/80680801_p0.png', 'ダンガンロンパ')
