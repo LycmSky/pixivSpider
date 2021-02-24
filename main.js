@@ -144,7 +144,7 @@ function save_illust(name, url) {
         else { logger.info(`下载完成 ===> ${name}`); resolve(1) }
       });
     }).catch(function (error) {
-      logger.error(`下载失败 ===> ${name}`);
+      logger.warn(`下载失败 ===> ${name}`);
       resolve(0);  // resolve 0/1 代表下载 失败/成功
     });
   });
